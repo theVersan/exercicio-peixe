@@ -3,6 +3,11 @@ var config = {
     width: 800,
     height: 600,
 
+    scale: {
+       mode: Phaser.Scale.FIT,
+       autoCenter: Phaser.Scale.CENTER_BOTH
+    },
+
     scene: {
         preload: preload,
         create: create,
@@ -28,22 +33,32 @@ function preload() {
 }
 
 function create() {
-    this.add.image(400, 300, 'mar');
-
-    //adicionar o logo na tela
     this.add.image(400, 525, 'logo').setScale(0.5);
 
-    //adiciona elemento extra
-    this.add.image(400, 400, 'ctrl').setScale(0.1);
+    //Verifica orientação de dispositivos
+    if(game.scale.orientation === Phaser.Scale.LANDSCAPE){
+        this.add.image(400, 300, 'mar');
+    }else if(game.scale.orientation === Phaser.Scale.PORTRAIT){
+        this.add.image(400, 300, 'mar-claro');
+    }
 
-    //guardar o peixe em uma variável
-    peixinho = this.add.image(400, 300, 'peixe');
+    //Verifica tipo de dispositivo
+    if(game.device.os.desktop){
+        peixinho = this.add.image(400, 300, 'peixe-azul');
+    }else {
+        peixinho = this.add.image(400, 300, 'peixe-laranja');
+    }
 
-    //transformando a variável
-    peixinho.setFlip(true, false);
-
+    //Evento de mudança de orientação
+    game.scale.on('orientationchange', function(orientation) {
+        if (orientation === Phaser.Scale.PORTRAIT) {
+            console.log('PORTRAIT')
+        }
+        if (orientation === Phaser.Scale.LANDSCAPE) {
+            console.log('LANDSCAPE')
+        }
+    });
 }
-
 function update() {
 
     // adicionando controles ao peixe
